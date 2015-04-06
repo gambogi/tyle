@@ -21,6 +21,7 @@ term = do
   xs <- many (alphaNum <|> oneOf "_-><")
   return (x:xs)
 
+
 variable :: Parser Expr
 variable = liftM Var term
 
@@ -31,26 +32,35 @@ application = try $ do
   t1 <- term
   return (App t0 t1)
 
-function :: Parser Expr
-function = do
-  lambda
-  spaces
-  t <- term
-  char '.'
-  spaces
-  exp <- expression
-  return (Fun t exp)
+typeTerm :: Parser Term
+typeTerm = try $ do
+  t  <- upper
+  ts <- many alphaNum
+  return (t:ts)
 
-assignment :: Parser Expr
-assignment = try $ do
-  t <- term
-  spaces >> char '=' >> spaces
-  e <- expression
-  return (Asn t e)
+tyleType :: Parser Type
+tyleType = try $ do
+    char ':' >> spaces
+    t <- typeTerm <|> unit
+    ts <- arrowType
+    return (makeType (t:ts))
+  where
+        makeType [t]    = Type t Unit
+        makeType (t:ts) = Type t (makeType ts)
+        arrowType = many $ (spaces >> string "->" >> spaces) *> typeTerm
+        unit =  string "()" >> return []
+
+function :: Parser Expr
+function = try $ do
+  lambda >> spaces
+  t0 <- term
+  t1 <- tyleType
+  char '.' >> spaces
+  exp <- expression
+  return (Fun t0 t1 exp)
 
 expression :: Parser Expr
 expression =  choice [ function
-                     , assignment
                      , application
                      , variable
                      ]

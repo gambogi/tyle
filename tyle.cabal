@@ -5,56 +5,74 @@ name:                tyle
 --                   | | | +--- code changes with no API change
 version:             0.1.0.0
 
-synopsis:            TYped Language Evaluator
+synopsis: TYped Language Evaluator
 
-description:         A toy language.
+description: A toy language.
 
-homepage:            github.com/gambogi/tyle
+homepage: github.com/gambogi/tyle
 
-license:             MIT
+license: MIT
 
-license-file:        LICENSE
+license-file: LICENSE
 
-author:              Matt Gambogi
+author: Matt Gambogi
 
-maintainer:          m@gambogi.com
+maintainer: m@gambogi.com
 
-category:            Development
+category: Development
 
-build-type:          Simple
+build-type: Simple
 
-cabal-version:       >=1.10
-
--- extra-source-files:  
+cabal-version: >=1.18
 
 library
     exposed-modules: Tyle.Parsers
+                   , Tyle.Grammar
+                   , Tyle.Eval
 
-    build-depends:       base >=4.8 && <4.9
-                 ,       parsec
-                 ,       text
-                 ,       safe
+    build-depends: base >=4.8 && <4.9
+                 , parsec
+                 , text
+                 , safe
 
     default-language:    Haskell2010
 
     documentation:       True
 
+test-suite tests
+    hs-source-dirs: test
+
+    main-is: Tests.hs
+
+    build-depends: base >=4.8 && <4.9
+                 , parsec
+                 , text
+                 , safe
+                 , HUnit
+                 , QuickCheck
+                 , tyle
+
+    ghc-options: -Wall
+
+    default-extenstions: OverloadedStrings
+
+    default-language:    Haskell2010
+
+    type: exitcode-stdio-1.0
+
 executable tyle
-  -- .hs or .lhs file containing the Main module.
-  main-is:             Main.hs
-  
-  -- Modules included in this executable, other than Main.
-  other-modules: Tyle.Parsers
+    main-is: Main.hs
 
-  default-extensions: OverloadedStrings
-                    , PartialTypeSignatures
+    default-extensions: OverloadedStrings
+                      , PartialTypeSignatures
 
-  build-depends: base >=4.8 && <4.9
-               , attoparsec
-               , parsec
-               , text
-               , bytestring
-               , safe
+    build-depends: base >=4.8 && <4.9
+                 , attoparsec
+                 , parsec
+                 , text
+                 , bytestring
+                 , safe
 
-  default-language:    Haskell2010
-  documentation:       True
+    default-language: Haskell2010
+
+    documentation: True

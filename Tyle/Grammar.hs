@@ -8,8 +8,7 @@ data Expr = Var Term
           | App Term Term
           deriving (Show)
 
-data Type = Type Term Type
-          | Unit
+data Type = Type Term
           deriving (Show)
 
 data Context = Empty

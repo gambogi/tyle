@@ -39,16 +39,9 @@ typeTerm = try $ do
   return (t:ts)
 
 tyleType :: Parser Type
-tyleType = try $ do
-    char ':' >> spaces
-    t <- typeTerm <|> unit
-    ts <- arrowType
-    return (makeType (t:ts))
-  where
-        makeType [t]    = Type t Unit
-        makeType (t:ts) = Type t (makeType ts)
-        arrowType = many $ (spaces >> string "->" >> spaces) *> typeTerm
-        unit =  string "()" >> return []
+tyleType =  char ':'
+         >> spaces
+         >> liftM Type typeTerm
 
 function :: Parser Expr
 function = try $ do
